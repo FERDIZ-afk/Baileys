@@ -1,6 +1,6 @@
 {
   "name": "@ferdiz-afk/baileys",
-  "version": "5.0.0",
+  "version": "1.0.0",
   "description": "WhatsApp API",
   "homepage": "https://github.com/FERDIZ-afk/Baileys",
   "main": "lib/index.js",
