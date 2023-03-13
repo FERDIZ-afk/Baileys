@@ -1,8 +1,8 @@
 {
   "name": "@ferdiz-afk/baileys",
-  "version": "1.0.0",
+  "version": "5.0.0",
   "description": "WhatsApp API",
-  "homepage": "https://github.com/FERDIZ-afk/Baileys",
+  "homepage": "https://github.com/FERDIZ-afk/Baileys-md",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "keywords": [
@@ -30,7 +30,7 @@
   "author": "Adhiraj Singh",
   "license": "MIT",
   "repository": {
-    "url": "git@github.com:FERDIZ-afk/baileys.git"
+    "url": "git@github.com:FERDIZ-afk/Baileys-md.git"
   },
   "dependencies": {
     "@hapi/boom": "^9.1.3",
