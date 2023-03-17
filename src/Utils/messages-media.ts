@@ -177,7 +177,6 @@ export const generateProfilePicture = async(mediaUpload: WAMediaUpload, custom: 
 	} else {
 	  
   	const prom = await Promise.resolve().then(() => import('jimp'))
-  	console.log(prom)
   	const jimp = await prom.read(bufferOrFilePath as any)
     const min = jimp.getWidth()
     const max = jimp.getHeight()
