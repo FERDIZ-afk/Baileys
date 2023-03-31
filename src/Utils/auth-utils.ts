@@ -105,7 +105,14 @@ export const addTransactionCapability = (
 			dbQueriesInTransaction += 1
 			const result = await state.get(type, idsRequiringFetch)
 
-			transactionCache[type] = Object.assign(transactionCache[type] || { }, result)
+		//	transactionCache[type] = Object.assign(transactionCache[type] || { }, result)
+			if(!transactionCache[type] && result) {
+				transactionCache[type] ||= {}
+				transactionCache[type] = Object.assign(
+					transactionCache[type]!,
+					result
+				)
+			}
 		}
 	}
 
