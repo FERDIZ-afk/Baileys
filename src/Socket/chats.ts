@@ -1,7 +1,7 @@
 import { Boom } from '@hapi/boom'
 import { proto } from '../../WAProto'
 import { PROCESSABLE_HISTORY_TYPES } from '../Defaults'
-import { ALL_WA_PATCH_NAMES, ChatModification, ChatMutation, LTHashState, MessageUpsertType, PresenceData, SocketConfig, WABusinessHoursConfig, WABusinessProfile, WAMediaUpload, WAMessage, WAPatchCreate, WAPatchName, WAPresence } from '../Types'
+import { ALL_WA_PATCH_NAMES, ChatModification, ChatMutation, LTHashState, MessageUpsertType, PresenceData, SocketConfig, WABusinessHoursConfig, WABusinessProfile, WAMediaUpload, WAMessage, WAPatchCreate, WAPatchName, WAPresence, WAPrivacyOnlineValue, WAPrivacyValue, WAReadReceiptsValue } from '../Types'
 import { chatModificationToAppPatch, ChatMutationMap, decodePatches, decodeSyncdSnapshot, encodeSyncdPatch, extractSyncdPatches, generateProfilePicture, getHistoryMsg, newLTHashState, processSyncAction } from '../Utils'
 import { makeMutex } from '../Utils/make-mutex'
 import processMessage from '../Utils/process-message'
@@ -161,6 +161,18 @@ export const makeChatsSocket = (config: SocketConfig) => {
 		})
 	}
 
+/** remove the profile picture for yourself or a group */
+	const removeProfilePicture = async(jid: string) => {
+		await query({
+			tag: 'iq',
+			attrs: {
+				to: jidNormalizedUser(jid),
+				type: 'set',
+				xmlns: 'w:profile:picture'
+			}
+		})
+	}
+	
 	/** update the profile status for yourself */
 	const updateProfileStatus = async(status: string) => {
 		await query({
@@ -857,6 +869,7 @@ export const makeChatsSocket = (config: SocketConfig) => {
 		fetchBlocklist,
 		fetchStatus,
 		updateProfilePicture,
+		removeProfilePicture,
 		updateProfileStatus,
 		updateProfileName,
 		updateBlockStatus,
