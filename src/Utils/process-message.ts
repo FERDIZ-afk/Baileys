@@ -281,8 +281,8 @@ const processMessage = async(
 		const emitParticipantsUpdate = (action: ParticipantAction) => (
 			ev.emit('group-participants.update', { id: jid, participants, action })
 		)
-		const emitGroupUpdate = (update: Partial<GroupMetadata>) => {
-			ev.emit('groups.update', [{ id: jid, ...update }])
+		const emitGroupUpdate = (update) => {
+			ev.emit('groups.update', [{ id: jid , actors: message.participant , ...update }])
 		}
 
 		const participantsIncludesMe = () => participants.find(jid => areJidsSameUser(meId, jid))
@@ -329,10 +329,24 @@ const processMessage = async(
 			chat.name = name
 			emitGroupUpdate({ subject: name })
 			break
+		case WAMessageStubType.GROUP_CHANGE_DESCRIPTION:
+			const description = message.messageStubParameters?.[0]
+			emitGroupUpdate({ desc: description })
+      break
 		case WAMessageStubType.GROUP_CHANGE_INVITE_LINK:
-			const code = message.messageStubParameters?.[0]
-			emitGroupUpdate({ inviteCode: code })
+			const invitcode = message.messageStubParameters?.[0]
+			emitGroupUpdate({ inviteCode: invitcode })
 			break
+    case WAMessageStubType.GROUP_CHANGE_ICON:
+      var profile = ''
+      const mprofile = message.messageStubParameters?.[0]
+      	if (!mprofile) {
+          profile = 'deleted'
+        } else {
+          profile = 'changed'
+        }
+			emitGroupUpdate({ icon_update: profile })
+      break
 		}
 	} else if(content?.pollUpdateMessage) {
 		const creationMsgKey = content.pollUpdateMessage.pollCreationMessageKey!

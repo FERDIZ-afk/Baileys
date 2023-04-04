@@ -141,7 +141,7 @@ export const encodeBase64EncodedStringForUpload = (b64: string) => (
 	)
 )
 
-export const generateProfilePicture = async(mediaUpload: WAMediaUpload) => {
+export const generateProfilePicture = async(mediaUpload: WAMediaUpload, custom: boolean) => {
 	let bufferOrFilePath: Buffer | string
 	if(Buffer.isBuffer(mediaUpload)) {
 		bufferOrFilePath = mediaUpload
@@ -153,26 +153,40 @@ export const generateProfilePicture = async(mediaUpload: WAMediaUpload) => {
 
 	const lib = await getImageProcessingLibrary()
 	let img: Promise<Buffer>
-	if('sharp' in lib && typeof lib.sharp?.default === 'function') {
-		img = lib.sharp!.default(bufferOrFilePath)
-			.resize(640, 640)
-			.jpeg({
-				quality: 50,
-			})
-			.toBuffer()
-	} else if('jimp' in lib && typeof lib.jimp?.read === 'function') {
-		const { read, MIME_JPEG, RESIZE_BILINEAR } = lib.jimp
-		const jimp = await read(bufferOrFilePath as any)
-		const min = Math.min(jimp.getWidth(), jimp.getHeight())
-		const cropped = jimp.crop(0, 0, min, min)
-
-		img = cropped
-			.quality(50)
-			.resize(640, 640, RESIZE_BILINEAR)
-			.getBufferAsync(MIME_JPEG)
+	if (!custom) {
+    	if('sharp' in lib && typeof lib.sharp?.default === 'function') {
+    		img = lib.sharp!.default(bufferOrFilePath)
+    			.resize(640, 640)
+    			.jpeg({
+    				quality: 50,
+    			})
+    			.toBuffer()
+    	} else if('jimp' in lib && typeof lib.jimp?.read === 'function') {
+    		const { read, MIME_JPEG, RESIZE_BILINEAR } = lib.jimp
+    		const jimp = await read(bufferOrFilePath as any)
+    		const min = Math.min(jimp.getWidth(), jimp.getHeight())
+    		const cropped = jimp.crop(0, 0, min, min)
+    
+    		img = cropped
+    			.quality(50)
+    			.resize(640, 640, RESIZE_BILINEAR)
+    			.getBufferAsync(MIME_JPEG)
+    	} else {
+    		throw new Boom('No image processing library available')
+    	}
 	} else {
-		throw new Boom('No image processing library available')
-	}
+	  
+  	const prom = await Promise.resolve().then(() => import('jimp'))
+  	const jimp = await prom.read(bufferOrFilePath as any)
+    const min = jimp.getWidth()
+    const max = jimp.getHeight()
+    const cropped = jimp.crop(0, 0, min, max)
+    
+  	img = cropped
+  	   .quality(95)
+  	   .scaleToFit(720, 720)
+  	   .getBufferAsync(prom.MIME_JPEG)
+  }
 
 	return {
 		img: await img,
