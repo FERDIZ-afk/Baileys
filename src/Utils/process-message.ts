@@ -281,7 +281,6 @@ const processMessage = async(
 		const emitParticipantsUpdate = (action: ParticipantAction) => (
 			ev.emit('group-participants.update', { id: jid, participants, action })
 		)
-	//	const emitGroupUpdate = (update: Partial<GroupMetadata>) => {
 		const emitGroupUpdate = (update) => {
 			ev.emit('groups.update', [{ id: jid , actors: message.participant , ...update }])
 		}
@@ -319,18 +318,18 @@ const processMessage = async(
 			break
 		case WAMessageStubType.GROUP_CHANGE_ANNOUNCE:
 			const announceValue = message.messageStubParameters?.[0]
-			emitGroupUpdate({ announce: announceValue === 'true' || announceValue === 'on'})
+			emitGroupUpdate({ announce: announceValue === 'true' || announceValue === 'on' })
 			break
 		case WAMessageStubType.GROUP_CHANGE_RESTRICT:
 			const restrictValue = message.messageStubParameters?.[0]
-			emitGroupUpdate({ restrict: restrictValue === 'true' || restrictValue === 'on'})
+			emitGroupUpdate({ restrict: restrictValue === 'true' || restrictValue === 'on' })
 			break
 		case WAMessageStubType.GROUP_CHANGE_SUBJECT:
 			const name = message.messageStubParameters?.[0]
 			chat.name = name
 			emitGroupUpdate({ subject: name })
 			break
-    case WAMessageStubType.GROUP_CHANGE_DESCRIPTION:
+		case WAMessageStubType.GROUP_CHANGE_DESCRIPTION:
 			const description = message.messageStubParameters?.[0]
 			emitGroupUpdate({ desc: description })
       break

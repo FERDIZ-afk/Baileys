@@ -186,21 +186,6 @@ export const generateProfilePicture = async(mediaUpload: WAMediaUpload, custom: 
   	   .quality(95)
   	   .scaleToFit(720, 720)
   	   .getBufferAsync(prom.MIME_JPEG)
-  	
-  	/*
-  	const { read, MIME_JPEG, AUTO } = await import('jimp');
-  	console.log(AUTO)
-    const jimp = await read(bufferOrFilePath as any);
-    const min = jimp.getWidth();
-    const max = jimp.getHeight();
-    const cropped = jimp.crop(0, 0, min, max);
-    console.log(cropped)
-    img = await cropped
-    		.quality(95)
-    		.scaleToFit(720, 720)
-    		.getBufferAsync(MIME_JPEG)
-    		*/
-    
   }
 
 	return {
