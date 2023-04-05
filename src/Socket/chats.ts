@@ -61,65 +61,6 @@ export const makeChatsSocket = (config: SocketConfig) => {
 		return privacySettings
 	}
 	
-	/** helper function to run a privacy IQ query */
-	const privacyQuery = async(name: string, value: string) => {
-		await query({
-			tag: 'iq',
-			attrs: {
-				xmlns: 'privacy',
-				to: S_WHATSAPP_NET,
-				type: 'set'
-			},
-			content: [{
-				tag: 'privacy',
-				attrs: {},
-				content: [
-					{
-						tag: 'category',
-						attrs: { name, value }
-					}
-				]
-			}]
-		})
-	}
-
-	const updateLastSeenPrivacy = async(value: WAPrivacyValue) => {
-		await privacyQuery('last', value)
-	}
-
-	const updateOnlinePrivacy = async(value: WAPrivacyOnlineValue) => {
-		await privacyQuery('online', value)
-	}
-
-	const updateProfilePicturePrivacy = async(value: WAPrivacyValue) => {
-		await privacyQuery('profile', value)
-	}
-
-	const updateReadReceiptsPrivacy = async(value: WAReadReceiptsValue) => {
-		await privacyQuery('readreceipts', value)
-	}
-
-	const updateGroupsAddPrivacy = async(value: WAPrivacyValue) => {
-		await privacyQuery('groupadd', value)
-	}
-
-	const updateDefaultDisappearingMode = async(duration: number) => {
-		await query({
-			tag: 'iq',
-			attrs: {
-				xmlns: 'disappearing_mode',
-				to: S_WHATSAPP_NET,
-				type: 'set'
-			},
-			content: [{
-				tag: 'disappearing_mode',
-				attrs: {
-					duration : duration.toString()
-				}
-			}]
-		})
-	}
-
 	/** helper function to run a generic IQ query */
 	const interactiveQuery = async(userNodes: BinaryNode[], queryNode: BinaryNode) => {
 		const result = await query({
@@ -932,12 +873,6 @@ export const makeChatsSocket = (config: SocketConfig) => {
 		updateProfileStatus,
 		updateProfileName,
 		updateBlockStatus,
-		updateLastSeenPrivacy,
-		updateOnlinePrivacy,
-		updateProfilePicturePrivacy,
-		updateReadReceiptsPrivacy,
-		updateGroupsAddPrivacy,
-		updateDefaultDisappearingMode,
 		getBusinessProfile,
 		resyncAppState,
 		chatModify
