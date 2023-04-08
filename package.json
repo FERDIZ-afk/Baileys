@@ -2,7 +2,7 @@
   "name": "@ferdiz-afk/baileys",
   "version": "5.1.3",
   "description": "WhatsApp API",
-  "homepage": "https://github.com/FERDIZ-afk/",
+  "homepage": "https://github.com/FERDIZ-afk",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "keywords": [
