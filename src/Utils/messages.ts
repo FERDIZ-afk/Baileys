@@ -296,7 +296,7 @@ export const generateWAMessageContent = async(
 
 		if(urlInfo) {
 			extContent.canonicalUrl = urlInfo['canonical-url']
-			extContent.matchedText = urlInfo['matched-text']
+			extContent.matchedText = urlInfo['canonical-url']
 			extContent.jpegThumbnail = urlInfo.jpegThumbnail
 			extContent.description = urlInfo.description
 			extContent.title = urlInfo.title
@@ -482,7 +482,13 @@ export const generateWAMessageContent = async(
 		m = { viewOnceMessage: { message: m } }
 	}
 
-	if('mentions' in message && message.mentions?.length) {
+	if ('contextInfo' in message && !!message.contextInfo) {
+		const [messageType] = Object.keys(m)
+		m[messageType].contextInfo = m[messageType] || { }
+		m[messageType].contextInfo = message.contextInfo
+	}
+  
+  if('mentions' in message && message.mentions?.length) {
 		const [messageType] = Object.keys(m)
 		m[messageType].contextInfo = m[messageType] || { }
 		m[messageType].contextInfo.mentionedJid = message.mentions
