@@ -347,6 +347,18 @@ const processMessage = async(
         }
 			emitGroupUpdate({ icon_update: profile })
       break
+    case WAMessageStubType.GROUP_MEMBERSHIP_JOIN_APPROVAL_MODE:
+			const membershipApprovalMode = message.messageStubParameters?.[0]
+			emitGroupUpdate({ membershipApprovalMode: membershipApprovalMode === 'on' })
+			break
+	  case WAMessageStubType.GROUP_MEMBERSHIP_JOIN_APPROVAL_REQUEST:
+			const membershipApprovalRequest = message.messageStubParameters?.[0]
+			emitGroupUpdate({ membershipApprovalRequest })
+			break
+		case WAMessageStubType.COMMUNITY_LINK_PARENT_GROUP_MEMBERSHIP_APPROVAL:
+			const membershipApprovalRevoke = message.messageStubParameters?.[0]
+			emitGroupUpdate({ membershipApprovalRevoke })
+			break
 		}
 	} else if(content?.pollUpdateMessage) {
 		const creationMsgKey = content.pollUpdateMessage.pollCreationMessageKey!

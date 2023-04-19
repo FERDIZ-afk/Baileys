@@ -270,6 +270,21 @@ export const makeMessagesRecvSocket = (config: SocketConfig) => {
 			msg.messageStubType = WAMessageStubType.GROUP_CHANGE_INVITE_LINK
 			msg.messageStubParameters = [ child.attrs.code ]
 			break
+		case 'membership_approval_mode':
+			msg.messageStubType = WAMessageStubType.GROUP_MEMBERSHIP_JOIN_APPROVAL_MODE
+			msg.messageStubParameters = [ (child.content as BinaryNode[]).filter(v => v.tag === 'group_join')[0].attrs.state ]
+			break
+//		case 'membership_approval_request':
+		case 'created_membership_requests':
+			msg.messageStubType = WAMessageStubType.GROUP_MEMBERSHIP_JOIN_APPROVAL_REQUEST
+			msg.messageStubParameters = [ child.attrs.request_method ]
+			break
+		case 'revoked_membership_requests':
+	//	  console.log(child.content)
+			msg.messageStubType = WAMessageStubType.COMMUNITY_LINK_PARENT_GROUP_MEMBERSHIP_APPROVAL
+			msg.messageStubParameters = getBinaryNodeChildren(child, 'participant').map(p => p.attrs.jid)
+			break
+			
 		}
 	}
 
